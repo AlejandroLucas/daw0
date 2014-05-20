@@ -20,25 +20,25 @@
 
     <div id="indexRightColumn">
         <div class="categoryBox">
-            <a href="#">
+            <a href="category">
                  <span class="categoryLabel"></span>
                 <span class="categoryLabelText">Cat1</span>
             </a>
         </div>
         <div class="categoryBox">
-            <a href="#">
+            <a href="category">
                  <span class="categoryLabel"></span>
                 <span class="categoryLabelText">Cat2</span>
             </a>
         </div>
         <div class="categoryBox">
-            <a href="#">
+            <a href="category">
                  <span class="categoryLabel"></span>
                 <span class="categoryLabelText">Cat3</span>
             </a>
         </div>
         <div class="categoryBox">
-            <a href="#">
+            <a href="category">
                  <span class="categoryLabel"></span>
                 <span class="categoryLabelText">Cat4</span>
             </a>

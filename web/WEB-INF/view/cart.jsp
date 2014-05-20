@@ -16,11 +16,11 @@
 
                  <div id="actionBar">
                     <%-- si esta definido el carrito i el numero de elemento  es >0--%>
-                    <a href="#" class="bubble hMargin">limpiar carrito</a>
+                    <a href="cleanCart" class="bubble hMargin">limpiar carrito</a>
                      <%-- si el usuario ha selecionado una categoria sino me quedo en la pagina inicial--%>
-                    <a href="#" class="bubble hMargin">continuar la compra</a>
+                    <a href="category" class="bubble hMargin">continuar la compra</a>
                      <%-- si esta definido el carrito i el numero de elemento es >0 procedo con el pedido--%>
-                    <a href="#" class="bubble hMargin">proceder con el pedido</a>
+                    <a href="checkout" class="bubble hMargin">proceder con el pedido</a>
                 </div>
 
                 <%-- si el carrito esta definiido y tengo elementos en el carrito  --%>  

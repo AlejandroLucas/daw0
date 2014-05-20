@@ -44,7 +44,7 @@
                         </td>
                         <td class="lightBlue">[ precio ]</td>
                         <td class="lightBlue">
-                            <form action="#" method="post">
+                            <form action="addToCart" method="post">
                                 <input type="submit" value="comprar">
                             </form>
                         </td>
@@ -61,7 +61,7 @@
                         </td>
                         <td class="white">[ precio ]</td>
                         <td class="white">
-                            <form action="#" method="post">
+                            <form action="addToCart" method="post">
                                 <input type="submit" value="comprar">
                             </form>
                         </td>
@@ -78,7 +78,7 @@
                         </td>
                         <td class="lightBlue">[ precio ]</td>
                         <td class="lightBlue">
-                            <form action="#" method="post">
+                            <form action="addToCart" method="post">
                                 <input type="submit" value="comprar">
                             </form>
                         </td>
@@ -95,7 +95,7 @@
                         </td>
                         <td class="white">[ precio ]</td>
                         <td class="white">
-                            <form action="#" method="post">
+                            <form action="addToCart" method="post">
                                 <input type="submit" value="Comprar">
                             </form>
                         </td>

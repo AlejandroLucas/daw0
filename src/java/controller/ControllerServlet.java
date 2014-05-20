@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controller;
 
 import java.io.IOException;
@@ -19,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ControllerServlet extends HttpServlet {
 
-    
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -33,8 +30,23 @@ public class ControllerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-       
+
+        String userPath = request.getServletPath();
+
+        if ("/category".equals(userPath)) {
+            userPath = "/category";
+        } else if ("/viewCart".equals(userPath)) {
+            userPath = "/cart";
+        } else if ("/checkout".equals(userPath)) {
+            userPath = "/checkout";
+        }else if ("/cleanCart".equals(userPath)) {
+            userPath = "/cart";
+        }else{
+            userPath = "../error";
+        }
+        String url = "/WEB-INF/view" + userPath + ".jsp";
+        request.setAttribute("view", url);
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
     /**
@@ -49,9 +61,23 @@ public class ControllerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        String userPath = request.getServletPath();
         
-        
+         if ("/addToCart".equals(userPath)) {
+            userPath = "/category";
+        } else if ("/updateCart".equals(userPath)) {
+            userPath = "/cart";
+        } else if ("/purchase".equals(userPath)) {
+            userPath = "/confirmation";
+        }else{
+            userPath = "../error";
+        }
+        String url = "/WEB-INF/view" + userPath + ".jsp";
+        request.setAttribute("view", url);
+        request.getRequestDispatcher(url).forward(request, response);
     }
+        
+    
 
     /**
      * Returns a short description of the servlet.

@@ -19,7 +19,7 @@
                             * si el servlet path no esta en /carrito
                             
                         --%>
-                        <a href="#" class="bubble">
+                        <a href="checkout" class="bubble">
                         realizar pedido &#x279f;
                          </a>
                         
@@ -31,7 +31,7 @@
                         <span class="horizontalMargin">
                        
                         </span>
-                        <a href="#" class="bubble">
+                        <a href="viewCart" class="bubble">
                           ver carrito 
                       </a>
                     </div>
