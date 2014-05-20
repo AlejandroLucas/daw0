@@ -16,15 +16,15 @@
                     <span class="categoryText">Cat 1</span>
                 </div>
 
-                <a href="#" class="categoryButton">
+                <a href="category" class="categoryButton">
                     <span class="categoryText">Cat 2</span>
                 </a>
 
-                <a href="#" class="categoryButton">
+                <a href="category" class="categoryButton">
                     <span class="categoryText">Cat 3</span>
                 </a>
 
-                <a href="#" class="categoryButton">
+                <a href="category" class="categoryButton">
                     <span class="categoryText">Cat 4</span>
                 </a>
             </div>
