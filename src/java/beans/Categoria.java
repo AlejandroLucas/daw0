@@ -18,7 +18,7 @@ public class Categoria {
     private int id;
     private String nombre;
     private String imagen;
-    ArrayList<Producto> productos;
+    private ArrayList<Producto> productos;
 
     public int getId() {
         return id;
@@ -59,7 +59,7 @@ public class Categoria {
     
     public List<Producto> getProductoList()
     {
-        return null;
+        return productos;
     }
     
     public List<Producto> getProductoList(int parseInt)
