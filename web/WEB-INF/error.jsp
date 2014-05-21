@@ -30,6 +30,6 @@
         
         <h2>Contacta al mail....</h2>
         
-        <h2><a href="login.jsp">Volver al principio</a></h2>
+        <h2><a href="index.jsp">Volver al principio</a></h2>
     </body>
 </html>

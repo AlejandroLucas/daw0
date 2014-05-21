@@ -3,7 +3,6 @@
     Created on : 12-mar-2014, 16:48:46
     Author     : Administrador
 --%>
-<%@page errorPage="../error.jsp" contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -12,12 +11,12 @@
     <div id="singleColumn">
 
         <p id="confirmationText">
-            <strong>Tu orden ha sido procesado y serÃ¡ entregado en un plazo de 24 horas.</strong>
+            <strong>Tu orden ha sido procesado y será entregado en un plazo de 24 horas.</strong>
             <br><br>
             Tu numero de pedido es:
-            <strong>[ nÃºmero de referencia ]</strong>
+            <strong>[ número de referencia ]</strong>
             <br>
-            Si tienes algunas preguntas en relaciÃ³n a tu pedido, <a href="#">contactanos</a>.
+            Si tienes algunas preguntas en relación a tu pedido, <a href="#">contactanos</a>.
             <br><br>
             Gracias por comprar en nuestra tienda!
 

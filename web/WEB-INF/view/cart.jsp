@@ -3,7 +3,6 @@
     Created on : 12-mar-2014, 16:48:46
     Author     : Administrador
 --%>
-<%@page errorPage="../error.jsp" contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -12,7 +11,7 @@
 
             <div id="centerColumn">
 
-                <p>Tu carrito de la compra contiene X artÃ­culos.</p>
+                <p>Tu carrito de la compra contiene X artículos.</p>
 
                  <div id="actionBar">
                     <%-- si esta definido el carrito i el numero de elemento  es >0--%>
