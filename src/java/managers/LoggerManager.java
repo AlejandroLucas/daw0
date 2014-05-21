@@ -24,7 +24,7 @@ public class LoggerManager {
         if (log == null) {
           
             PropertyConfigurator.configure(prefix+"/WEB-INF/log4j.properties");
-            log = Logger.getLogger("cochesmotos");
+            log = Logger.getLogger("daw0");
 
         }
         return log;
