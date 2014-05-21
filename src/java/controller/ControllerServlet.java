@@ -43,12 +43,15 @@ public class ControllerServlet extends HttpServlet {
         ///Users/confalonieri/Dropbox/Roberto/stucom/DAW/tools-projects/NetBeansProjects/Practica34/web
         LoggerManager.prefix = prefix;
         
-        //
-        CreateCategoriasBeans();
+        
+        createCategoriasBeans();
+        
+        getServletContext().setAttribute("categorias",categorias);
+        
 
     }
     
-    protected void CreateCategoriasBeans() {
+    protected void createCategoriasBeans() {
         
         ArrayList<Producto> productos1;
         ArrayList<Producto> productos2;
