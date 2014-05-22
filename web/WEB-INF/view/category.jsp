@@ -13,7 +13,7 @@
 
             <div id="categoryLeftColumn">
                 <div class="categoryButton" id="selectedCategory">
-                    <span class="categoryText">Cat 11</span>
+                    <span class="categoryText">Cat 1</span>
                 </div>
 
                 <a href="category" class="categoryButton">
@@ -30,9 +30,10 @@
             </div>
 
             <div id="categoryRightColumn">
-                <p id="categoryTitle">[ categoria selecionada ]</p>
+                <p id="categoryTitle">${categoriaSelecionada.nombre}</p>
 
                 <table id="productTable">
+                    
                     <tr>
                         <td class="lightBlue">
                             <img src="#" alt="product image">

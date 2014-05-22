@@ -32,10 +32,9 @@ public class ControllerServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     //ArrayList<Categoria> categorias;
-    
     public ArrayList<Categoria> categorias;
+    private Categoria categoriaTmp = null;
     
     @Override
     public void init() throws ServletException {
@@ -43,28 +42,26 @@ public class ControllerServlet extends HttpServlet {
         String prefix = getServletContext().getRealPath("/");
         ///Users/confalonieri/Dropbox/Roberto/stucom/DAW/tools-projects/NetBeansProjects/Practica34/web
         LoggerManager.prefix = prefix;
-        
-        
+
         createCategoriasBeans();
-        
-        getServletContext().setAttribute("categorias",categorias);
-        
+
+        getServletContext().setAttribute("categorias", categorias);
 
     }
-    
+
     protected void createCategoriasBeans() {
-        
+
         ArrayList<Producto> productos1;
         ArrayList<Producto> productos2;
         ArrayList<Producto> productos3;
         ArrayList<Producto> productos4;
-        
+
         categorias = new ArrayList<Categoria>();
         categorias.add(new Categoria(1, "Bicicletas", ""));
         categorias.add(new Categoria(2, "Patines", ""));
         categorias.add(new Categoria(3, "Monopatines", ""));
         categorias.add(new Categoria(4, "Accesorios", ""));
-        
+
         productos1 = new ArrayList<Producto>();
         productos1.add(new Producto(1, "Carreras", 300, "bicicleta de carreras amateur", "carreras.jpg", 1));
         productos1.add(new Producto(2, "Paseo", 150, "bicicleta parea pasear", "paseo.jpg", 1));
@@ -85,7 +82,7 @@ public class ControllerServlet extends HttpServlet {
         productos3.add(new Producto(11, "LongBoard", 125, "grandes dimensiones", "longboard.jpg", 3));
         productos3.add(new Producto(12, "Articulados", 400, "articulado ligero", "articulado.jpg", 3));
         categorias.get(2).setProductoList(productos3);
-        
+
         productos4 = new ArrayList<Producto>();
         productos4.add(new Producto(13, "Casco", 15, "Obligatorio legalmente", "casco.jpg", 4));
         productos4.add(new Producto(14, "Guantes", 20, "Para las manos", "guantes.jpg", 4));
@@ -106,22 +103,36 @@ public class ControllerServlet extends HttpServlet {
             userPath = "/cart";
         } else if ("/checkout".equals(userPath)) {
             userPath = "/checkout";
-        }else if ("/cleanCart".equals(userPath)) {
+        } else if ("/cleanCart".equals(userPath)) {
             userPath = "/cart";
-        }else{
+        } else {
             userPath = "../error";
         }
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
-        
-        
-        
-        
-        
+
+        categoriaTmp = null;
+
+        if (userPath.equals("(/category")) {
+            String categoriaId = request.getQueryString();
+            categoriaTmp = getCategoriaPorId(categoriaId);
+            request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
+            request.getSession().setAttribute("listaProductos", categoriaTmp.getProductoList());
+        }       
     }
-    
-    
+
+    public Categoria getCategoriaPorId(String categoriaId) {
+        int idTmp = Integer.parseInt(categoriaId);
+
+        for (int i = 0; i < categorias.size(); i++) {
+            if (categorias.get(i).getId() == idTmp) {
+                categoriaTmp=categorias.get(i);
+                return (categoriaTmp);
+            }
+        }
+        return null;
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -134,24 +145,22 @@ public class ControllerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String userPath = request.getServletPath();
-        
-         if ("/addToCart".equals(userPath)) {
+
+        if ("/addToCart".equals(userPath)) {
             userPath = "/category";
         } else if ("/updateCart".equals(userPath)) {
             userPath = "/cart";
         } else if ("/purchase".equals(userPath)) {
             userPath = "/confirmation";
-        }else{
+        } else {
             userPath = "../error";
         }
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
     }
-        
-    
 
     /**
      * Returns a short description of the servlet.

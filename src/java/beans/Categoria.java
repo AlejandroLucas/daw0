@@ -57,19 +57,21 @@ public class Categoria {
         this.imagen = imagen;
     }
     
-    public List<Producto> getProductoList()
+    public ArrayList<Producto> getProductoList()
     {
         return productos;
     }
     
-    public List<Producto> getProductoList(int parseInt)
+    public ArrayList<Producto> getProductoList(int parseInt)
     {
         return null;
     }
     
-    public void setProductoList(List<Producto> productoList)
+    public void setProductoList(ArrayList<Producto> productoList)
     {
         productos = (ArrayList<Producto>) productoList;
     }
+
+    
     
 }
