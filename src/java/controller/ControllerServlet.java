@@ -97,13 +97,20 @@ public class ControllerServlet extends HttpServlet {
 
         String userPath = request.getServletPath();
 
-        if ("/category".equals(userPath)) {
-            userPath = "/category";
-        } else if ("/viewCart".equals(userPath)) {
+        if (userPath.equals("/category")) {
+            
+            categoriaTmp = null;
+            String categoriaId = request.getParameter("categoryId");
+            categoriaTmp = getCategoriaPorId(categoriaId);
+            request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
+            request.getSession().setAttribute("listaProductos", categoriaTmp.getProductoList());
+            //userPath = "/category";
+            
+        } else if (userPath.equals("/viewCart")) {
             userPath = "/cart";
-        } else if ("/checkout".equals(userPath)) {
+        } else if (userPath.equals("/checkout")) {
             userPath = "/checkout";
-        } else if ("/cleanCart".equals(userPath)) {
+        } else if (userPath.equals("/cleanCart")) {
             userPath = "/cart";
         } else {
             userPath = "../error";
@@ -112,14 +119,6 @@ public class ControllerServlet extends HttpServlet {
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
 
-        categoriaTmp = null;
-
-        if (userPath.equals("(/category")) {
-            String categoriaId = request.getQueryString();
-            categoriaTmp = getCategoriaPorId(categoriaId);
-            request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
-            request.getSession().setAttribute("listaProductos", categoriaTmp.getProductoList());
-        }       
     }
 
     public Categoria getCategoriaPorId(String categoriaId) {
