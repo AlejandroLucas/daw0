@@ -35,23 +35,27 @@
 
     <table id="productTable">
 
-        <tr>
-            <td class="lightBlue">
-                <img src="#" alt="product image">
-            </td>
-            <td class="lightBlue">
-                [ nombre producto  ]
-                <br>
-                <span class="smallText">[ descripcion producto  ]</span>
-            </td>
-            <td class="lightBlue">[ precio ]</td>
-            <td class="lightBlue">
-                <form action="addToCart" method="post">
-                    <input type="submit" value="comprar">
-                </form>
-            </td>
-        </tr>
+        <c:forEach var="productoVista" items="${listaProductos}">
+            <tr>
+                <td class="lightBlue">
+                    <img src="#" alt="product image">
+                </td>
+                <td class="lightBlue">
+                    ${productoVista.nombre}
+                    <br>
+                    <span class="smallText">${productoVista.descripcion}</span>
+                </td>
+                <td class="lightBlue">${productoVista.precio}</td>
+                <td class="lightBlue">
+                    <form action="addToCart" method="post">
+                        <input type="submit" value="comprar">
+                    </form>
+                </td>
+            </tr>
 
+        </c:forEach>
+
+        <!--
         <tr>
             <td class="white">
                 <img src="#" alt="product image">
@@ -102,6 +106,8 @@
                 </form>
             </td>
         </tr>
+        
+        -->
     </table>
 </div>
 

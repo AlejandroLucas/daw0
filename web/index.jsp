@@ -13,7 +13,6 @@
         <div id="welcomeText">
             <p>[ mensaje de bienvenida ]</p>
             
-            
         </div>
     </div>
 
