@@ -7,6 +7,7 @@ package controller;
 
 import beans.Categoria;
 import beans.Producto;
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -113,7 +114,14 @@ public class ControllerServlet extends HttpServlet {
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
+        
+        
+        
+        
+        
     }
+    
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.
