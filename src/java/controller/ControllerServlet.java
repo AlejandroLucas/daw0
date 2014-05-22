@@ -60,7 +60,7 @@ public class ControllerServlet extends HttpServlet {
         categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
         categorias.add(new Categoria(2, "Patines", "linea.jpg"));
         categorias.add(new Categoria(3, "Monopatines", "monopatin.jpg"));
-        categorias.add(new Categoria(4, "Accesorios", ""));
+        categorias.add(new Categoria(4, "Accesorios", "guantes.jpg"));
 
         productos1 = new ArrayList<Producto>();
         productos1.add(new Producto(1, "Carreras", 300, "bicicleta de carreras amateur", "carreras.jpg", 1));
@@ -86,7 +86,7 @@ public class ControllerServlet extends HttpServlet {
         productos4 = new ArrayList<Producto>();
         productos4.add(new Producto(13, "Casco", 15, "Obligatorio legalmente", "casco.jpg", 4));
         productos4.add(new Producto(14, "Guantes", 20, "Para las manos", "guantes.jpg", 4));
-        productos4.add(new Producto(15, "Rueda", 15, "repuestos de colores", "rueda.jpg", 4));
+        productos4.add(new Producto(15, "Rueda", 15, "repuestos de colores", "rueda.JPG", 4));
         productos4.add(new Producto(16, "Protecciones", 40, "rodilleras y coderas", "protecciones.jpg", 4));
         categorias.get(3).setProductoList(productos4);
     }
