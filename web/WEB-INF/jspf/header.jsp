@@ -44,4 +44,5 @@
 
                 <img src="${initParam.images}/europa.png" id="logoText" alt="ejemplo DAW">
                 <img src="${initParam.images}/stucom.png" id="logoText2" alt="ejemplo DAW">
+              
             </div>

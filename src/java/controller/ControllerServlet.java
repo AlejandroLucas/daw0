@@ -57,9 +57,9 @@ public class ControllerServlet extends HttpServlet {
         ArrayList<Producto> productos4;
 
         categorias = new ArrayList<Categoria>();
-        categorias.add(new Categoria(1, "Bicicletas", ""));
-        categorias.add(new Categoria(2, "Patines", ""));
-        categorias.add(new Categoria(3, "Monopatines", ""));
+        categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
+        categorias.add(new Categoria(2, "Patines", "linea.jpg"));
+        categorias.add(new Categoria(3, "Monopatines", "monopatin.jpg"));
         categorias.add(new Categoria(4, "Accesorios", ""));
 
         productos1 = new ArrayList<Producto>();

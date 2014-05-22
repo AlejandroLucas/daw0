@@ -38,7 +38,7 @@
         <c:forEach var="productoVista" items="${listaProductos}">
             <tr>
                 <td class="lightBlue">
-                    <img src="#" alt="product image">
+                    <img src="${initParam.productImagePath}/${productoVista.imagen}" alt="product image">
                 </td>
                 <td class="lightBlue">
                     ${productoVista.nombre}

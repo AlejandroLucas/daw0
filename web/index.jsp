@@ -22,6 +22,7 @@
                 <a href="category?categoryId=${categoria.id}">
                      <span class="categoryLabel">${categoria.id}</span>
                     <span class="categoryLabelText">${categoria.nombre}</span>
+                     <img src="${initParam.categoryImagePath}/${categoria.imagen}" alt="product image">
                 </a>
             </div>
         </c:forEach>
