@@ -9,12 +9,16 @@ import beans.Categoria;
 import beans.Producto;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import managers.DatabaseManager;
 import managers.LoggerManager;
 
 /**
@@ -43,7 +47,12 @@ public class ControllerServlet extends HttpServlet {
         ///Users/confalonieri/Dropbox/Roberto/stucom/DAW/tools-projects/NetBeansProjects/Practica34/web
         LoggerManager.prefix = prefix;
 
+        DatabaseManager.openConnection();
+        
         createCategoriasBeans();
+
+        DatabaseManager.closeConnection();
+
 
         getServletContext().setAttribute("categorias", categorias);
 
@@ -56,8 +65,40 @@ public class ControllerServlet extends HttpServlet {
         ArrayList<Producto> productos3;
         ArrayList<Producto> productos4;
 
-        categorias = new ArrayList<Categoria>();
-        categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
+       categorias = new ArrayList<Categoria>();
+       
+       String categoriaSql = "SELECT * FROM categoria";
+
+        //declaro los objetos Java para la query
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        
+        try {
+            //ejecutar query
+            preparedStatement = DatabaseManager.conn.prepareStatement(categoriaSql);
+            resultSet = preparedStatement.executeQuery();
+                      //processar query
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nombre = resultSet.getString("nombre");
+                String imagen = resultSet.getString("imagen");
+                Categoria categoria = new Categoria(id, nombre, imagen);
+            LoggerManager.getLog().info("mete una categoria");
+                categorias.add(categoria);
+            }
+            LoggerManager.getLog().info(categorias.size());
+            
+            
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException ex) {
+
+            categorias = null;
+            LoggerManager.getLog().error(ex.toString());
+        }
+       
+        /* categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
         categorias.add(new Categoria(2, "Patines", "linea.jpg"));
         categorias.add(new Categoria(3, "Monopatines", "monopatin.jpg"));
         categorias.add(new Categoria(4, "Accesorios", "guantes.jpg"));
@@ -88,13 +129,13 @@ public class ControllerServlet extends HttpServlet {
         productos4.add(new Producto(14, "Guantes", 20, "Para las manos", "guantes.jpg", 4));
         productos4.add(new Producto(15, "Rueda", 15, "repuestos de colores", "rueda.JPG", 4));
         productos4.add(new Producto(16, "Protecciones", 40, "rodilleras y coderas", "protecciones.jpg", 4));
-        categorias.get(3).setProductoList(productos4);
+        categorias.get(3).setProductoList(productos4);*/
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+DatabaseManager.openConnection();
         String userPath = request.getServletPath();
 
         if (userPath.equals("/category")) {
@@ -118,6 +159,7 @@ public class ControllerServlet extends HttpServlet {
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
+DatabaseManager.closeConnection();
 
     }
 
@@ -144,6 +186,7 @@ public class ControllerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+DatabaseManager.openConnection();
 
         String userPath = request.getServletPath();
 
@@ -159,6 +202,7 @@ public class ControllerServlet extends HttpServlet {
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
+DatabaseManager.closeConnection();
     }
 
     /**
