@@ -40,6 +40,13 @@ public class Producto {
         this.categoriaId = categoriaId;
     }
 
+    public Producto(int id, String nombre, double precio, String descripcion, String imagen) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
+    }
     
     public int getId() {
         return id;

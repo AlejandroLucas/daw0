@@ -58,12 +58,56 @@ public class ControllerServlet extends HttpServlet {
 
     }
 
+    private ArrayList<Producto> crearProducto(String id){
+            
+        
+       ArrayList<Producto> productos  = new ArrayList<Producto>();
+       
+       String productoSql = "SELECT * FROM producto WHERE idCategoria="+id;
+
+        //declaro los objetos Java para la query
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        
+        try {
+            //ejecutar query
+            preparedStatement = DatabaseManager.conn.prepareStatement(productoSql);
+            resultSet = preparedStatement.executeQuery();
+                      //processar query
+            while (resultSet.next()) {
+                int idProducto = resultSet.getInt("id");
+                String nombre = resultSet.getString("nombre");
+                String imagen = resultSet.getString("imagen");
+                String descripcion = resultSet.getString("descripcion");
+                double precio = resultSet.getDouble("precio");
+                
+                Producto producto = new Producto(idProducto, nombre, precio, descripcion, imagen);
+                LoggerManager.getLog().info("mete un producto en una categoria");
+                productos.add(producto);
+            }
+            LoggerManager.getLog().info(categorias.size());
+            
+            
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException ex) {
+
+            categorias = null;
+            LoggerManager.getLog().error(ex.toString());
+        }
+         finally{
+            return (productos);
+        }       
+         
+    }
+    
     protected void createCategoriasBeans() {
 
-        ArrayList<Producto> productos1;
-        ArrayList<Producto> productos2;
-        ArrayList<Producto> productos3;
-        ArrayList<Producto> productos4;
+      //  ArrayList<Producto> productos1;
+      ///  ArrayList<Producto> productos2;
+      //  ArrayList<Producto> productos3;
+      //  ArrayList<Producto> productos4;
 
        categorias = new ArrayList<Categoria>();
        
@@ -83,6 +127,7 @@ public class ControllerServlet extends HttpServlet {
                 String nombre = resultSet.getString("nombre");
                 String imagen = resultSet.getString("imagen");
                 Categoria categoria = new Categoria(id, nombre, imagen);
+                
             LoggerManager.getLog().info("mete una categoria");
                 categorias.add(categoria);
             }
@@ -97,6 +142,8 @@ public class ControllerServlet extends HttpServlet {
             categorias = null;
             LoggerManager.getLog().error(ex.toString());
         }
+ 
+       
        
         /* categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
         categorias.add(new Categoria(2, "Patines", "linea.jpg"));
@@ -144,7 +191,9 @@ DatabaseManager.openConnection();
             String categoriaId = request.getParameter("categoryId");
             categoriaTmp = getCategoriaPorId(categoriaId);
             request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
-            request.getSession().setAttribute("listaProductos", categoriaTmp.getProductoList());
+            request.getSession().setAttribute("listaProductos",  crearProducto(categoriaId));
+            
+           
             //userPath = "/category";
             
         } else if (userPath.equals("/viewCart")) {
