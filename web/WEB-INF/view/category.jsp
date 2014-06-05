@@ -48,6 +48,7 @@
                 <td class="lightBlue">${productoVista.precio}</td>
                 <td class="lightBlue">
                     <form action="addToCart" method="post">
+                        <input type="hidden" name="productoIdPost" value="${productoVista.id}">
                         <input type="submit" value="comprar">
                     </form>
                 </td>

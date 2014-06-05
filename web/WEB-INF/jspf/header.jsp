@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page errorPage="../error.jsp" contentType="text/html" pageEncoding="UTF-8"%>
 
 <html>
@@ -13,7 +14,16 @@
 
                     <div class="headerWidget">
                         <%-- visualizar el enlance de la realizar pedido
-                            * si el carrito existe y no esta vacio
+                            si el carrito existe y no esta vacio--%>
+                        <c:choose>
+                            <c:when test="${carritoCompra}">
+                                ${carritoCompra.numeroElementos}
+                            </c:when>
+                            <c:otherwise>
+                            </c:otherwise>
+                        </c:choose>
+
+                            <%--
                             * si el servlet path no esta en /pedido 
                             * si la vista pedida no es pedido y carrito
                             * si el servlet path no esta en /carrito

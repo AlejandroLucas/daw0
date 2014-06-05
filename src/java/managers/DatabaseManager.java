@@ -30,7 +30,7 @@ public class DatabaseManager {
     private static String driverName = "com.mysql.jdbc.Driver";
     private static String option = "?autoReconnect=true";
     private static String userdb = "root";
-    private static String pwddb = "o7807013";
+    private static String pwddb = "";
 
     public static Connection conn = null;
     private static Statement stmt = null;

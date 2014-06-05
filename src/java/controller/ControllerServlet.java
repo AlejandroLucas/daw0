@@ -7,6 +7,7 @@ package controller;
 
 import beans.Categoria;
 import beans.Producto;
+import carrito.CarritoCompra;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import managers.DatabaseManager;
 import managers.LoggerManager;
 
@@ -39,7 +41,7 @@ public class ControllerServlet extends HttpServlet {
     //ArrayList<Categoria> categorias;
     public ArrayList<Categoria> categorias;
     private Categoria categoriaTmp = null;
-    
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -48,46 +50,43 @@ public class ControllerServlet extends HttpServlet {
         LoggerManager.prefix = prefix;
 
         DatabaseManager.openConnection();
-        
+
         createCategoriasBeans();
 
         DatabaseManager.closeConnection();
-
 
         getServletContext().setAttribute("categorias", categorias);
 
     }
 
-    private ArrayList<Producto> crearProducto(String id){
-            
-        
-       ArrayList<Producto> productos  = new ArrayList<Producto>();
-       
-       String productoSql = "SELECT * FROM producto WHERE idCategoria="+id;
+    private ArrayList<Producto> crearProducto(String id) {
+
+        ArrayList<Producto> productos = new ArrayList<Producto>();
+
+        String productoSql = "SELECT * FROM producto WHERE idCategoria=" + id;
 
         //declaro los objetos Java para la query
         PreparedStatement preparedStatement;
         ResultSet resultSet;
-        
+
         try {
             //ejecutar query
             preparedStatement = DatabaseManager.conn.prepareStatement(productoSql);
             resultSet = preparedStatement.executeQuery();
-                      //processar query
+            //processar query
             while (resultSet.next()) {
                 int idProducto = resultSet.getInt("id");
                 String nombre = resultSet.getString("nombre");
                 String imagen = resultSet.getString("imagen");
                 String descripcion = resultSet.getString("descripcion");
                 double precio = resultSet.getDouble("precio");
-                
+
                 Producto producto = new Producto(idProducto, nombre, precio, descripcion, imagen);
                 LoggerManager.getLog().info("mete un producto en una categoria");
                 productos.add(producto);
             }
             LoggerManager.getLog().info(categorias.size());
-            
-            
+
             preparedStatement.close();
             resultSet.close();
 
@@ -95,45 +94,80 @@ public class ControllerServlet extends HttpServlet {
 
             categorias = null;
             LoggerManager.getLog().error(ex.toString());
-        }
-         finally{
+        } finally {
             return (productos);
-        }       
-         
+        }
+
     }
     
-    protected void createCategoriasBeans() {
+     private Producto getProductoById(String id) {
 
-      //  ArrayList<Producto> productos1;
-      ///  ArrayList<Producto> productos2;
-      //  ArrayList<Producto> productos3;
-      //  ArrayList<Producto> productos4;
-
-       categorias = new ArrayList<Categoria>();
-       
-       String categoriaSql = "SELECT * FROM categoria";
+        String productoSql = "SELECT * FROM producto WHERE idProducto=" + id;
 
         //declaro los objetos Java para la query
         PreparedStatement preparedStatement;
         ResultSet resultSet;
+        Producto producto = null;
         
+        try {
+            //ejecutar query
+            preparedStatement = DatabaseManager.conn.prepareStatement(productoSql);
+            resultSet = preparedStatement.executeQuery();
+            //processar query
+            while (resultSet.next()) {
+                int idProducto = resultSet.getInt("id");
+                String nombre = resultSet.getString("nombre");
+                String imagen = resultSet.getString("imagen");
+                String descripcion = resultSet.getString("descripcion");
+                double precio = resultSet.getDouble("precio");
+
+                producto = new Producto(idProducto, nombre, precio, descripcion, imagen);
+                LoggerManager.getLog().info("mete un producto en una categoria");
+            }
+            LoggerManager.getLog().info(categorias.size());
+
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException ex) {
+            categorias = null;
+            LoggerManager.getLog().error(ex.toString());
+        } finally {
+            return (producto);
+        }
+
+    }
+
+    protected void createCategoriasBeans() {
+
+      //  ArrayList<Producto> productos1;
+        ///  ArrayList<Producto> productos2;
+        //  ArrayList<Producto> productos3;
+        //  ArrayList<Producto> productos4;
+        categorias = new ArrayList<Categoria>();
+
+        String categoriaSql = "SELECT * FROM categoria";
+
+        //declaro los objetos Java para la query
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
         try {
             //ejecutar query
             preparedStatement = DatabaseManager.conn.prepareStatement(categoriaSql);
             resultSet = preparedStatement.executeQuery();
-                      //processar query
+            //processar query
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String nombre = resultSet.getString("nombre");
                 String imagen = resultSet.getString("imagen");
                 Categoria categoria = new Categoria(id, nombre, imagen);
-                
-            LoggerManager.getLog().info("mete una categoria");
+
+                LoggerManager.getLog().info("mete una categoria");
                 categorias.add(categoria);
             }
             LoggerManager.getLog().info(categorias.size());
-            
-            
+
             preparedStatement.close();
             resultSet.close();
 
@@ -142,64 +176,60 @@ public class ControllerServlet extends HttpServlet {
             categorias = null;
             LoggerManager.getLog().error(ex.toString());
         }
- 
-       
-       
+
         /* categorias.add(new Categoria(1, "Bicicletas", "carreras.jpg"));
-        categorias.add(new Categoria(2, "Patines", "linea.jpg"));
-        categorias.add(new Categoria(3, "Monopatines", "monopatin.jpg"));
-        categorias.add(new Categoria(4, "Accesorios", "guantes.jpg"));
+         categorias.add(new Categoria(2, "Patines", "linea.jpg"));
+         categorias.add(new Categoria(3, "Monopatines", "monopatin.jpg"));
+         categorias.add(new Categoria(4, "Accesorios", "guantes.jpg"));
 
-        productos1 = new ArrayList<Producto>();
-        productos1.add(new Producto(1, "Carreras", 300, "bicicleta de carreras amateur", "carreras.jpg", 1));
-        productos1.add(new Producto(2, "Paseo", 150, "bicicleta parea pasear", "paseo.jpg", 1));
-        productos1.add(new Producto(3, "Mountain", 600, "bicicleta todoterreno para deporte extremo", "mountain.jpg", 1));
-        productos1.add(new Producto(4, "BMX", 360, "bicicleta para cross", "BMX.jpg", 1));
-        categorias.get(0).setProductoList(productos1);
+         productos1 = new ArrayList<Producto>();
+         productos1.add(new Producto(1, "Carreras", 300, "bicicleta de carreras amateur", "carreras.jpg", 1));
+         productos1.add(new Producto(2, "Paseo", 150, "bicicleta parea pasear", "paseo.jpg", 1));
+         productos1.add(new Producto(3, "Mountain", 600, "bicicleta todoterreno para deporte extremo", "mountain.jpg", 1));
+         productos1.add(new Producto(4, "BMX", 360, "bicicleta para cross", "BMX.jpg", 1));
+         categorias.get(0).setProductoList(productos1);
 
-        productos2 = new ArrayList<Producto>();
-        productos2.add(new Producto(5, "Línea", 150, "patinaje deportivo", "linea.jpg", 2));
-        productos2.add(new Producto(6, "Hielo", 300, "para patinaje sobre hielo", "hielo.jpg", 2));
-        productos2.add(new Producto(7, "Paralelo", 80, "4 ruedas paralelas", "paralelo.jpg", 2));
-        productos2.add(new Producto(8, "Infantil", 40, "para niños", "infantil.jpg", 2));
-        categorias.get(1).setProductoList(productos2);
+         productos2 = new ArrayList<Producto>();
+         productos2.add(new Producto(5, "Línea", 150, "patinaje deportivo", "linea.jpg", 2));
+         productos2.add(new Producto(6, "Hielo", 300, "para patinaje sobre hielo", "hielo.jpg", 2));
+         productos2.add(new Producto(7, "Paralelo", 80, "4 ruedas paralelas", "paralelo.jpg", 2));
+         productos2.add(new Producto(8, "Infantil", 40, "para niños", "infantil.jpg", 2));
+         categorias.get(1).setProductoList(productos2);
 
-        productos3 = new ArrayList<Producto>();
-        productos3.add(new Producto(9, "Monopatín", 80, "monopatín clásico", "monopatin.jpg", 3));
-        productos3.add(new Producto(10, "Patinete", 70, "para desplazamiento urbano", "patinete.jpg", 3));
-        productos3.add(new Producto(11, "LongBoard", 125, "grandes dimensiones", "longboard.jpg", 3));
-        productos3.add(new Producto(12, "Articulados", 400, "articulado ligero", "articulado.jpg", 3));
-        categorias.get(2).setProductoList(productos3);
+         productos3 = new ArrayList<Producto>();
+         productos3.add(new Producto(9, "Monopatín", 80, "monopatín clásico", "monopatin.jpg", 3));
+         productos3.add(new Producto(10, "Patinete", 70, "para desplazamiento urbano", "patinete.jpg", 3));
+         productos3.add(new Producto(11, "LongBoard", 125, "grandes dimensiones", "longboard.jpg", 3));
+         productos3.add(new Producto(12, "Articulados", 400, "articulado ligero", "articulado.jpg", 3));
+         categorias.get(2).setProductoList(productos3);
 
-        productos4 = new ArrayList<Producto>();
-        productos4.add(new Producto(13, "Casco", 15, "Obligatorio legalmente", "casco.jpg", 4));
-        productos4.add(new Producto(14, "Guantes", 20, "Para las manos", "guantes.jpg", 4));
-        productos4.add(new Producto(15, "Rueda", 15, "repuestos de colores", "rueda.JPG", 4));
-        productos4.add(new Producto(16, "Protecciones", 40, "rodilleras y coderas", "protecciones.jpg", 4));
-        categorias.get(3).setProductoList(productos4);*/
+         productos4 = new ArrayList<Producto>();
+         productos4.add(new Producto(13, "Casco", 15, "Obligatorio legalmente", "casco.jpg", 4));
+         productos4.add(new Producto(14, "Guantes", 20, "Para las manos", "guantes.jpg", 4));
+         productos4.add(new Producto(15, "Rueda", 15, "repuestos de colores", "rueda.JPG", 4));
+         productos4.add(new Producto(16, "Protecciones", 40, "rodilleras y coderas", "protecciones.jpg", 4));
+         categorias.get(3).setProductoList(productos4);*/
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-DatabaseManager.openConnection();
+        DatabaseManager.openConnection();
         String userPath = request.getServletPath();
 
         if (userPath.equals("/category")) {
-            
+
             categoriaTmp = null;
             String categoriaId = request.getParameter("categoryId");
             categoriaTmp = getCategoriaPorId(categoriaId);
             request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
-            request.getSession().setAttribute("listaProductos",  crearProducto(categoriaId));
-            
-           
+            request.getSession().setAttribute("listaProductos", crearProducto(categoriaId));
+
             //userPath = "/category";
-            
         } else if (userPath.equals("/viewCart")) {
             userPath = "/cart";
         } else if (userPath.equals("/checkout")) {
-            userPath = "/checkout";
+            userPath = "/checkout";String categoriaId = request.getParameter("categoryId");
         } else if (userPath.equals("/cleanCart")) {
             userPath = "/cart";
         } else {
@@ -208,7 +238,7 @@ DatabaseManager.openConnection();
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
-DatabaseManager.closeConnection();
+        DatabaseManager.closeConnection();
 
     }
 
@@ -217,7 +247,7 @@ DatabaseManager.closeConnection();
 
         for (int i = 0; i < categorias.size(); i++) {
             if (categorias.get(i).getId() == idTmp) {
-                categoriaTmp=categorias.get(i);
+                categoriaTmp = categorias.get(i);
                 return (categoriaTmp);
             }
         }
@@ -235,11 +265,26 @@ DatabaseManager.closeConnection();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-DatabaseManager.openConnection();
+        DatabaseManager.openConnection();
 
+        HttpSession httpSession = request.getSession();
+        CarritoCompra carritoCompra = (CarritoCompra) httpSession.getAttribute("carritoCompra");
+                        
         String userPath = request.getServletPath();
 
         if ("/addToCart".equals(userPath)) {
+            if (carritoCompra == null){
+            carritoCompra = new CarritoCompra();
+        }
+            String productoId = request.getParameter("productoIdPost");
+            
+            Producto producto = getProductoById(productoId);
+            int cantidadInt=1;
+            //int productoIdInt= Integer.parseInt(productoId);
+            
+            carritoCompra.añadirProducto(producto, cantidadInt);
+
+            httpSession.setAttribute("carritoCompra", carritoCompra);
             userPath = "/category";
         } else if ("/updateCart".equals(userPath)) {
             userPath = "/cart";
@@ -251,7 +296,7 @@ DatabaseManager.openConnection();
         String url = "/WEB-INF/view" + userPath + ".jsp";
         request.setAttribute("view", url);
         request.getRequestDispatcher(url).forward(request, response);
-DatabaseManager.closeConnection();
+        DatabaseManager.closeConnection();
     }
 
     /**
