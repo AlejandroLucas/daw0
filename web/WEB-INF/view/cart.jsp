@@ -23,34 +23,35 @@
                 </div>
 
                 <%-- si el carrito esta definiido y tengo elementos en el carrito  --%>  
-                <h4 id="subtotal">[ subtotal: xxx ]</h4>
+                <h4 id="subtotal">[ subtotal: ${SubTotal} ]</h4>
 
                 <table id="cartTable">
-
+                       
                     <tr class="header">
                         <th>producto</th>
                         <th>nombre</th>
                         <th>precio</th>
-                        <th>cuantidad</th>
+                        <th>cantidad</th>
                     </tr>
-
+         <c:forEach var="productoCarrito" items="${carritoCompra.productosCarritoCompra}">
                     <tr>
                         <td class="lightBlue">
-                            <img src="#" alt="product image">
+                            <img src="${initParam.productImagePath}/${productoCarrito.producto.imagen}" alt="product image">
                         </td>
                         
-                        <td class="lightBlue">[ nombre producto ]</td>
+                        <td class="lightBlue">${productoCarrito.producto.nombre}</td>
                         
                         <td class="lightBlue">
-                            [&euro; precio ] <%-- precio productos --%>
+                            ${productoCarrito.producto.precio} <%-- precio productos --%>
                             <br>
                             <span class="smallText">
                                 [detalles precio unitad]
-                               
+                               ${SubTotal}
                             </span>
+                            
                         </td>
                         
-                        <td class="lightBlue">[ cuantidad ]
+                        <td class="lightBlue">${productoCarrito.cantidad}
 
                             <form action="updateCart" method="post">
                                 <input type="hidden"
@@ -67,8 +68,8 @@
                             </form>
                         </td>
                     </tr>
-
-                     <tr>
+                    </c:forEach>
+                    <!-- <tr>
                         <td class="white">
                             <img src="#" alt="product image">
                         </td>
@@ -135,6 +136,7 @@
                             </form>
                         </td>
                     </tr>
+                    -->
 
                 </table>
 

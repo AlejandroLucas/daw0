@@ -102,7 +102,7 @@ public class ControllerServlet extends HttpServlet {
     
      private Producto getProductoById(String id) {
 
-        String productoSql = "SELECT * FROM producto WHERE idProducto=" + id;
+        String productoSql = "SELECT * FROM producto WHERE id=" + id;
 
         //declaro los objetos Java para la query
         PreparedStatement preparedStatement;
@@ -116,15 +116,15 @@ public class ControllerServlet extends HttpServlet {
             //processar query
             while (resultSet.next()) {
                 int idProducto = resultSet.getInt("id");
-                String nombre = resultSet.getString("nombre");
-                String imagen = resultSet.getString("imagen");
-                String descripcion = resultSet.getString("descripcion");
-                double precio = resultSet.getDouble("precio");
+                String nombre = resultSet.getString("Nombre");
+                String imagen = resultSet.getString("Imagen");
+                String descripcion = resultSet.getString("Descripcion");
+                double precio = resultSet.getDouble("Precio");
 
                 producto = new Producto(idProducto, nombre, precio, descripcion, imagen);
                 LoggerManager.getLog().info("mete un producto en una categoria");
             }
-            LoggerManager.getLog().info(categorias.size());
+            //LoggerManager.getLog().info(producto.getId());
 
             preparedStatement.close();
             resultSet.close();
@@ -133,6 +133,7 @@ public class ControllerServlet extends HttpServlet {
             categorias = null;
             LoggerManager.getLog().error(ex.toString());
         } finally {
+            LoggerManager.getLog().info("devuelve un producto del carrito"+producto.getId());
             return (producto);
         }
 
@@ -281,10 +282,11 @@ public class ControllerServlet extends HttpServlet {
             Producto producto = getProductoById(productoId);
             int cantidadInt=1;
             //int productoIdInt= Integer.parseInt(productoId);
-            
+            LoggerManager.getLog().info("iniciamos añadirproducto");
             carritoCompra.añadirProducto(producto, cantidadInt);
 
             httpSession.setAttribute("carritoCompra", carritoCompra);
+            LoggerManager.getLog().info("volvemos a categoria despues de añadir un producto al carrito");
             userPath = "/category";
         } else if ("/updateCart".equals(userPath)) {
             userPath = "/cart";

@@ -7,16 +7,18 @@
 package carrito;
 
 import beans.Producto;
+import managers.LoggerManager;
 
 /**
  *
  * @author FO-Mañana
  */
-class ProductoCarritoCompra {
+public class ProductoCarritoCompra {
     private int cantidad;
     private Producto producto;
          
     public ProductoCarritoCompra(){};
+    
     public ProductoCarritoCompra(Producto producto, int cantidad){
         this.producto=producto;
         this.cantidad=cantidad;
@@ -35,6 +37,7 @@ class ProductoCarritoCompra {
         this.producto = producto;
     }
     public void incrementaCantidad(){
+        LoggerManager.getLog().info("incrementa cantida");
         this.cantidad+=1;
     }
     public void decrementaCantidad(){};

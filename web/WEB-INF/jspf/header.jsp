@@ -16,7 +16,7 @@
                         <%-- visualizar el enlance de la realizar pedido
                             si el carrito existe y no esta vacio--%>
                         <c:choose>
-                            <c:when test="${carritoCompra}">
+                            <c:when test="${carritoCompra != null}">
                                 ${carritoCompra.numeroElementos}
                             </c:when>
                             <c:otherwise>
