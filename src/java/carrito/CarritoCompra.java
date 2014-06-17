@@ -17,8 +17,9 @@ public class CarritoCompra {
 
     private int numeroElementos;
     private double total;
+    private double gastosSpedicion;
     private ArrayList<ProductoCarritoCompra> productosCarritoCompra = new ArrayList<ProductoCarritoCompra>();
-    private double SubTotal;
+    private double subTotal = 0;
 
     public CarritoCompra() {
     }
@@ -32,7 +33,8 @@ public class CarritoCompra {
             ProductoCarritoCompra productoCarritoCompra = new ProductoCarritoCompra(producto, cantidad);
             productosCarritoCompra.add(productoCarritoCompra);
             numeroElementos++;
-            SubTotal += producto.getPrecio();
+            subTotal += producto.getPrecio();
+            LoggerManager.getLog().info(subTotal);
         } else {
             for (int i = 0; i < productosCarritoCompra.size(); i++) {
                 LoggerManager.getLog().info("entra en for");
@@ -42,7 +44,8 @@ public class CarritoCompra {
                         actualiza(cantidad, producto.getId());
                         productoEncontrado = true;
 
-                        SubTotal += producto.getPrecio();
+                       subTotal += producto.getPrecio();
+                       LoggerManager.getLog().info(subTotal);
                     }
                 } /*else {
                  LoggerManager.getLog().info("crea en producto en el carrito no existe");
@@ -58,26 +61,47 @@ public class CarritoCompra {
                 ProductoCarritoCompra productoCarritoCompra = new ProductoCarritoCompra(producto, cantidad);
                 productosCarritoCompra.add(productoCarritoCompra);
                 numeroElementos++;
-
-                SubTotal += producto.getPrecio();
-
+                subTotal += producto.getPrecio();
+                LoggerManager.getLog().info(subTotal);
             }
         }
     }
 
     public double getSubTotal() {
-        return SubTotal;
+        return subTotal;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
     }
 
     public void limpia() {
+        for (int i = productosCarritoCompra.size() - 1; i >=0; i--) {
+            productosCarritoCompra.remove(i);
+        }
+        numeroElementos = 0; 
+        subTotal = 0;
     }
 
     public void actualiza(int cantidadInt, int productoIdInt) {
+    
+        int cantidadAnterior;
         LoggerManager.getLog().info("actualiza cantidad productos");
         for (int i = 0; i < productosCarritoCompra.size(); i++) {
             if (productosCarritoCompra.get(i).getProducto().getId() == productoIdInt) {
-                productosCarritoCompra.get(i).incrementaCantidad();
-                numeroElementos += cantidadInt;
+                cantidadAnterior = productosCarritoCompra.get(i).getCantidad();
+                subTotal = subTotal + productosCarritoCompra.get(i).getProducto().getPrecio() * cantidadInt
+                         - productosCarritoCompra.get(i).getProducto().getPrecio() * cantidadAnterior;
+                productosCarritoCompra.get(i).incrementaCantidad(cantidadInt);
+                numeroElementos = numeroElementos + cantidadInt - cantidadAnterior;
+                if (cantidadInt <= 0)
+                {
+                    productosCarritoCompra.remove(i);
+                }
             }
             /*else{
              Producto producto = getProductoById(productoIdInt);
@@ -86,7 +110,18 @@ public class CarritoCompra {
         }
     }
 
-    public void CalculaTotal(String gastosSpedicion) {
+    public double getGastosSpedicion() {
+        return gastosSpedicion;
+    }
+
+    public void setGastosSpedicion(double gastosSpedicion) {
+        this.gastosSpedicion = gastosSpedicion;
+    }
+    
+    
+    public void calculaTotal(double gastos) {
+        total = subTotal + gastos;
+        gastosSpedicion = gastos;
     }
 
     public double getTotal() {

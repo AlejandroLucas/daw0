@@ -18,6 +18,7 @@ public class Cliente {
     private String nombre;
     private String email;
     private String direccion;
+    private String poblacion;
     private String telefono;
     private String tarjeta;
 
@@ -28,13 +29,22 @@ public class Cliente {
         this.id = id;
     }
 
-    public Cliente(int id, String nombre, String email, String direccion, String telefono, String tarjeta) {
-        this.id = id;
+    public Cliente( String nombre, String email, String direccion, String poblacion, String telefono, String tarjeta) {
+        //this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
+        this.poblacion = poblacion;
         this.telefono = telefono;
         this.tarjeta = tarjeta;
+    }
+
+    public String getPoblacion() {
+        return poblacion;
+    }
+
+    public void setPoblacion(String poblacion) {
+        this.poblacion = poblacion;
     }
 
     

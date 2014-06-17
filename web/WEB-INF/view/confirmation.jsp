@@ -33,26 +33,20 @@
                     <td>cuantidad</td>
                     <td>precio</td>
                 </tr>
+                <c:forEach var="productoCarrito" items="${carritoCompra.productosCarritoCompra}">
                 <tr class="lightBlue">
                     <td>
-                        [nombre producto]
+                        ${productoCarrito.producto.nombre}
                     </td>
                     <td class="quantityColumn">
-                        [cuantidad]
+                        ${productoCarrito.cantidad}
                     </td>
                     <td class="confirmationPriceColumn">
-                        &euro; [precio]
+                        &euro; ${productoCarrito.precioProductos}
                     </td>
                 </tr>
-                <tr class="white">
-                    <td>[nombre producto]</td>
-                    <td class="quantityColumn">
-                        [cuantidad]
-                    </td>
-                    <td class="confirmationPriceColumn">
-                        &euro; [precio]
-                    </td>
-                </tr>
+                </c:forEach>
+               
 
 
                 <tr class="lightBlue">
@@ -65,7 +59,7 @@
                         <strong>Gastos de spedicion:</strong>
                     </td>
                     <td id="deliverySurchargeCellRight">
-                        &euro; [gastos de spedicion]
+                        &euro; [${carritoCompra.gastosSpedicion}]
                     </td>
                 </tr>
 
@@ -74,7 +68,7 @@
                         <strong>total:</strong>
                     </td>
                     <td id="totalCellRight">
-                        &euro; [total orden]
+                        &euro; [${carritoCompra.total}]
                     </td>
                 </tr>
 
@@ -102,16 +96,16 @@
 
                 <tr>
                     <td colspan="3" class="lightBlue">
-                        [nombre cliente]
+                        [${cliente.nombre}]
                         <br>
-                        [direcion cliente]
+                        [${cliente.direccion}]
                         <br>
-                        Barcelona  [comarca cliente]
+                        [${cliente.poblacion}]
                         <br>
                         <hr>
-                        <strong>email:</strong>  [email cliente]
+                        <strong>email:</strong>  [${cliente.email}]
                         <br>
-                        <strong>telefono</strong>  [telefono cliente]
+                        <strong>telefono</strong>  [${cliente.telefono}]
                     </td>
                 </tr>
             </table>

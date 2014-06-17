@@ -25,7 +25,7 @@ public class DatabaseManager {
 
     private static String dbLocation = "tienda";
     private static String dbURL = "jdbc:mysql://";
-    private static String dbHost = "localhost";
+    private static String dbHost = "127.0.0.1";
     private static String dbPort = "3306";
     private static String driverName = "com.mysql.jdbc.Driver";
     private static String option = "?autoReconnect=true";

@@ -48,17 +48,25 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="direcion">Direcion</label></td>
+                    <td><label for="direccion">Direccion</label></td>
                     <td class="inputField">
                         <input type="text"
                                size="31"
                                maxlength="45"
                                id="direcion"
-                               name="direcion">
-
-                        <br>
-                        Barcelona
+                               name="direccion">
                    
+                </td>
+            </tr>
+             <tr>
+                    <td><label for="poblacion">Población</label></td>
+                    <td class="inputField">
+                        <input type="text"
+                               size="31"
+                               maxlength="45"
+                               id="poblacion"
+                               name="poblacion">
+
                 </td>
             </tr>
             <tr>
@@ -91,17 +99,17 @@
             <tr>
                 <td>Subtotal:</td>
                 <td class="checkoutPriceColumn">
-                    &euro; [subtotale carrito de la compra]</td>
+                    &euro; [${carritoCompra.subTotal}]</td>
             </tr>
             <tr>
                 <td>Gastos envios:</td>
                 <td class="checkoutPriceColumn">
-                    &euro; [gastos de spedicion] </td>
+                    &euro; [${carritoCompra.gastosSpedicion}] </td>
             </tr>
             <tr>
                 <td class="total">Total:</td>
                 <td class="total checkoutPriceColumn">
-                    &euro; [total ]</td>
+                    &euro; [${carritoCompra.total}]</td>
             </tr>
         </table>
     </div>

@@ -6,6 +6,7 @@
 package controller;
 
 import beans.Categoria;
+import beans.Cliente;
 import beans.Producto;
 import carrito.CarritoCompra;
 import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
@@ -14,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -99,8 +102,8 @@ public class ControllerServlet extends HttpServlet {
         }
 
     }
-    
-     private Producto getProductoById(String id) {
+
+    private Producto getProductoById(String id) {
 
         String productoSql = "SELECT * FROM producto WHERE id=" + id;
 
@@ -108,7 +111,7 @@ public class ControllerServlet extends HttpServlet {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Producto producto = null;
-        
+
         try {
             //ejecutar query
             preparedStatement = DatabaseManager.conn.prepareStatement(productoSql);
@@ -133,7 +136,7 @@ public class ControllerServlet extends HttpServlet {
             categorias = null;
             LoggerManager.getLog().error(ex.toString());
         } finally {
-            LoggerManager.getLog().info("devuelve un producto del carrito"+producto.getId());
+            LoggerManager.getLog().info("devuelve un producto del carrito" + producto.getId());
             return (producto);
         }
 
@@ -141,7 +144,7 @@ public class ControllerServlet extends HttpServlet {
 
     protected void createCategoriasBeans() {
 
-      //  ArrayList<Producto> productos1;
+        //  ArrayList<Producto> productos1;
         ///  ArrayList<Producto> productos2;
         //  ArrayList<Producto> productos3;
         //  ArrayList<Producto> productos4;
@@ -222,16 +225,27 @@ public class ControllerServlet extends HttpServlet {
 
             categoriaTmp = null;
             String categoriaId = request.getParameter("categoryId");
-            categoriaTmp = getCategoriaPorId(categoriaId);
-            request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
-            request.getSession().setAttribute("listaProductos", crearProducto(categoriaId));
+            if (categoriaId != null && !categoriaId.equals("")) {
+                categoriaTmp = getCategoriaPorId(categoriaId);
+                request.getSession().setAttribute("categoriaSeleccionada", categoriaTmp);
+                request.getSession().setAttribute("listaProductos", crearProducto(categoriaId));
+            } else {
+                userPath = "/../../index";
+            }
 
             //userPath = "/category";
         } else if (userPath.equals("/viewCart")) {
             userPath = "/cart";
         } else if (userPath.equals("/checkout")) {
-            userPath = "/checkout";String categoriaId = request.getParameter("categoryId");
+            CarritoCompra car = (CarritoCompra) request.getSession().getAttribute("carritoCompra");
+            car.calculaTotal(10);
+            request.getSession().setAttribute("carritoCompra", car);
+            userPath = "/checkout";
+            String categoriaId = request.getParameter("categoryId");
         } else if (userPath.equals("/cleanCart")) {
+            CarritoCompra car = (CarritoCompra) request.getSession().getAttribute("carritoCompra");
+            car.limpia();
+            request.getSession().setAttribute("carritoCompra", car);
             userPath = "/cart";
         } else {
             userPath = "../error";
@@ -270,17 +284,17 @@ public class ControllerServlet extends HttpServlet {
 
         HttpSession httpSession = request.getSession();
         CarritoCompra carritoCompra = (CarritoCompra) httpSession.getAttribute("carritoCompra");
-                        
+
         String userPath = request.getServletPath();
 
         if ("/addToCart".equals(userPath)) {
-            if (carritoCompra == null){
-            carritoCompra = new CarritoCompra();
-        }
+            if (carritoCompra == null) {
+                carritoCompra = new CarritoCompra();
+            }
             String productoId = request.getParameter("productoIdPost");
-            
+
             Producto producto = getProductoById(productoId);
-            int cantidadInt=1;
+            int cantidadInt = 1;
             //int productoIdInt= Integer.parseInt(productoId);
             LoggerManager.getLog().info("iniciamos añadirproducto");
             carritoCompra.añadirProducto(producto, cantidadInt);
@@ -289,8 +303,26 @@ public class ControllerServlet extends HttpServlet {
             LoggerManager.getLog().info("volvemos a categoria despues de añadir un producto al carrito");
             userPath = "/category";
         } else if ("/updateCart".equals(userPath)) {
+
+            int productoId = Integer.parseInt(request.getParameter("productId"));
+            //int numProducto = request.getParameter("productoIdPost");
+            int cantidad = Integer.parseInt(request.getParameter("quantity"));
+            carritoCompra.actualiza(cantidad, productoId);
+            httpSession.setAttribute("carritoCompra", carritoCompra);
             userPath = "/cart";
         } else if ("/purchase".equals(userPath)) {
+            String nombre = request.getParameter("nombre");
+            String email = request.getParameter("email");
+            String telefono = request.getParameter("telefono");
+            String direccion = request.getParameter("direccion");
+            String poblacion = request.getParameter("poblacion");
+            String tarjeta = request.getParameter("tarjeta");
+            Cliente cliente = new Cliente(nombre, email, direccion, poblacion, telefono, tarjeta);
+            if (cliente != null && carritoCompra != null) {
+                gestionaOrden(cliente, carritoCompra);
+            }
+            httpSession.setAttribute("cliente", cliente);
+
             userPath = "/confirmation";
         } else {
             userPath = "../error";
@@ -310,5 +342,55 @@ public class ControllerServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void gestionaOrden(Cliente cliente, CarritoCompra carritoCompra) {
+        try {
+            DatabaseManager.openConnection();
+            DatabaseManager.conn.setAutoCommit(false);
+            int clienteId = añadeCliente(cliente);
+            int ordenId = añadeOrden(clienteId, carritoCompra);
+            int numReferencia = añadeOrdenCliente(ordenId, carritoCompra);
+            DatabaseManager.conn.commit();
+            DatabaseManager.conn.setAutoCommit(true);
+            
+            // CarritoCompra carritoCompra = (CarritoCompra) httpSession.getAttribute("carritoCompra");
+            // CarritoCompra carritoCompra = (CarritoCompra) httpSession.getAttribute("carritoCompra");
+        } catch (SQLException ex) {
+            try {
+                DatabaseManager.conn.rollback();
+            } catch (SQLException ex1) 
+            {
+                LoggerManager.getLog().info("Error: se realiza rollback en gestionaOrden" + ex1);
+                Logger.getLogger(ControllerServlet.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+            LoggerManager.getLog().info("Error: al gestionaOrden" + ex);
+            Logger.getLogger(ControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private int añadeCliente(Cliente cliente) {
+        int clienteId = 0;
+
+        //TO DO
+        
+        return clienteId;
+    }
+
+    private int añadeOrden(int clienteId, CarritoCompra carritoCompra) {
+        int ordenId = 0;
+        
+        //TO DO
+        
+        return ordenId;
+    }
+
+    private int añadeOrdenCliente(int ordenId, CarritoCompra carritoCompra) {
+        int numReferenciaOrden = 0;
+        
+        //TO DO
+        
+        return numReferenciaOrden;
+    }
 
 }

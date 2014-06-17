@@ -36,9 +36,9 @@ public class ProductoCarritoCompra {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
-    public void incrementaCantidad(){
-        LoggerManager.getLog().info("incrementa cantida");
-        this.cantidad+=1;
+    public void incrementaCantidad(int cant){
+        LoggerManager.getLog().info("incrementa cantidad");
+        this.cantidad = cant;
     }
     public void decrementaCantidad(){};
     

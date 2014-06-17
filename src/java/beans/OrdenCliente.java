@@ -29,7 +29,7 @@ public class OrdenCliente {
     public OrdenCliente(int id, double total, Date fecha, int numeroConfirmacion) {
         this.id = id;
         this.total = total;
-        this.fecha = fecha;
+        this.fecha =  fecha;
         this.numeroConfirmacion = numeroConfirmacion;
     }
 

@@ -11,19 +11,19 @@
 
             <div id="centerColumn">
 
-                <p>Tu carrito de la compra contiene X artículos.</p>
+                <p>Tu carrito de la compra contiene ${carritoCompra.numeroElementos} artículos.</p>
 
                  <div id="actionBar">
                     <%-- si esta definido el carrito i el numero de elemento  es >0--%>
                     <a href="cleanCart" class="bubble hMargin">limpiar carrito</a>
                      <%-- si el usuario ha selecionado una categoria sino me quedo en la pagina inicial--%>
-                    <a href="category" class="bubble hMargin">continuar la compra</a>
+                    <a href="category?categoryId=${categoriaSeleccionada.id}" class="bubble hMargin">continuar la compra</a>
                      <%-- si esta definido el carrito i el numero de elemento es >0 procedo con el pedido--%>
                     <a href="checkout" class="bubble hMargin">proceder con el pedido</a>
                 </div>
 
                 <%-- si el carrito esta definiido y tengo elementos en el carrito  --%>  
-                <h4 id="subtotal">[ subtotal: ${SubTotal} ]</h4>
+                <h4 id="subtotal">[ Subtotal: ${carritoCompra.subTotal}  ]</h4>
 
                 <table id="cartTable">
                        
@@ -46,21 +46,21 @@
                             <br>
                             <span class="smallText">
                                 [detalles precio unitad]
-                               ${SubTotal}
+                              Subtotal: ${productoCarrito.precioProductos}
                             </span>
                             
                         </td>
                         
-                        <td class="lightBlue">${productoCarrito.cantidad}
+                        <td class="lightBlue"><%--${productoCarrito.cantidad}--%>
 
                             <form action="updateCart" method="post">
                                 <input type="hidden"
                                        name="productId"
-                                       value="productoId"> <%--id del producto --%>
+                                       value="${productoCarrito.producto.id}"> <%--id del producto --%>
                                 <input type="text"
                                        maxlength="2"
                                        size="2"
-                                       value="1" <%--cuantidad de productos que tengo en el carrito --%>
+                                       value="${productoCarrito.cantidad}" <%--cuantidad de productos que tengo en el carrito --%>
                                        name="quantity">
                                 <input type="submit"
                                        name="submit"

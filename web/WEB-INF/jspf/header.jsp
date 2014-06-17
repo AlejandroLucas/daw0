@@ -18,6 +18,7 @@
                         <c:choose>
                             <c:when test="${carritoCompra != null}">
                                 ${carritoCompra.numeroElementos}
+                                
                             </c:when>
                             <c:otherwise>
                             </c:otherwise>
