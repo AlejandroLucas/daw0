@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-06-2014 a las 10:43:09
+-- Tiempo de generación: 18-06-2014 a las 13:59:27
 -- Versión del servidor: 5.5.27
 -- Versión de PHP: 5.4.7
 
@@ -56,11 +56,20 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `email` varchar(45) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(60) NOT NULL,
-  `tarjeta` varchar(16) DEFAULT NULL,
+  `poblacion` varchar(20) NOT NULL,
+  `tarjeta` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idCliente_UNIQUE` (`id`),
   UNIQUE KEY `DNI_UNIQUE` (`DNI`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`id`, `DNI`, `Nombre`, `email`, `telefono`, `direccion`, `poblacion`, `tarjeta`) VALUES
+(5, 'ih', 'jhohj', 'hoi', 'hoh', 'oh', 'oh', 'oh'),
+(6, 'er', 'er', 'er', 'lkn', 'kj', 'ln', 'ljo');
 
 -- --------------------------------------------------------
 
@@ -77,6 +86,16 @@ CREATE TABLE IF NOT EXISTS `detalle_orden` (
   KEY `fkProducto_idx` (`idProducto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `detalle_orden`
+--
+
+INSERT INTO `detalle_orden` (`idProducto`, `idOrden`, `cantidad`, `total`) VALUES
+(6, 5, 1, 150.00),
+(7, 5, 1, 300.00),
+(2, 6, 1, 300.00),
+(3, 6, 1, 150.00);
+
 -- --------------------------------------------------------
 
 --
@@ -86,13 +105,21 @@ CREATE TABLE IF NOT EXISTS `detalle_orden` (
 CREATE TABLE IF NOT EXISTS `orden_cliente` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `total` decimal(6,2) NOT NULL DEFAULT '0.00',
-  `fecha` datetime NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `NumeroConfirmacion` int(10) unsigned NOT NULL,
   `idCliente` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `NumeroConfirmacion_UNIQUE` (`NumeroConfirmacion`),
   KEY `fkCliente_idx` (`idCliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Volcado de datos para la tabla `orden_cliente`
+--
+
+INSERT INTO `orden_cliente` (`id`, `total`, `fecha`, `NumeroConfirmacion`, `idCliente`) VALUES
+(5, 1210.00, '2014-06-18 11:48:34', 297165183, 5),
+(6, 1060.00, '2014-06-18 11:54:06', 101435098, 6);
 
 -- --------------------------------------------------------
 
@@ -141,8 +168,8 @@ INSERT INTO `producto` (`id`, `Nombre`, `Imagen`, `Descripcion`, `Precio`, `idCa
 -- Filtros para la tabla `detalle_orden`
 --
 ALTER TABLE `detalle_orden`
-  ADD CONSTRAINT `fkProducto` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fkOrden` FOREIGN KEY (`idOrden`) REFERENCES `orden_cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fkOrden` FOREIGN KEY (`idOrden`) REFERENCES `orden_cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fkProducto` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `orden_cliente`

@@ -15,6 +15,7 @@ import java.util.List;
 public class Cliente {
     
     private int id;
+    private String dni;
     private String nombre;
     private String email;
     private String direccion;
@@ -29,8 +30,9 @@ public class Cliente {
         this.id = id;
     }
 
-    public Cliente( String nombre, String email, String direccion, String poblacion, String telefono, String tarjeta) {
+    public Cliente(String dni, String nombre, String email, String direccion, String poblacion, String telefono, String tarjeta) {
         //this.id = id;
+        this.dni = dni;
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
@@ -56,6 +58,13 @@ public class Cliente {
         this.id = id;
     }
 
+     public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
     public String getNombre() {
         return nombre;
     }

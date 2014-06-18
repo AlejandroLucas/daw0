@@ -14,7 +14,7 @@
             <strong>Tu orden ha sido procesado y será entregado en un plazo de 24 horas.</strong>
             <br><br>
             Tu numero de pedido es:
-            <strong>[ número de referencia ]</strong>
+            <strong>[${OrdenCliente.NumeroConfirmacion}]</strong>
             <br>
             Si tienes algunas preguntas en relación a tu pedido, <a href="#">contactanos</a>.
             <br><br>

@@ -7,10 +7,11 @@ package controller;
 
 import beans.Categoria;
 import beans.Cliente;
+import beans.OrdenCliente;
 import beans.Producto;
 import carrito.CarritoCompra;
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
+import java.util.Random;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -311,13 +312,14 @@ public class ControllerServlet extends HttpServlet {
             httpSession.setAttribute("carritoCompra", carritoCompra);
             userPath = "/cart";
         } else if ("/purchase".equals(userPath)) {
+            String dni = request.getParameter("dni");
             String nombre = request.getParameter("nombre");
             String email = request.getParameter("email");
             String telefono = request.getParameter("telefono");
             String direccion = request.getParameter("direccion");
             String poblacion = request.getParameter("poblacion");
             String tarjeta = request.getParameter("tarjeta");
-            Cliente cliente = new Cliente(nombre, email, direccion, poblacion, telefono, tarjeta);
+            Cliente cliente = new Cliente(dni, nombre, email, direccion, poblacion, telefono, tarjeta);
             if (cliente != null && carritoCompra != null) {
                 gestionaOrden(cliente, carritoCompra);
             }
@@ -348,8 +350,8 @@ public class ControllerServlet extends HttpServlet {
             DatabaseManager.openConnection();
             DatabaseManager.conn.setAutoCommit(false);
             int clienteId = añadeCliente(cliente);
-            int ordenId = añadeOrden(clienteId, carritoCompra);
-            int numReferencia = añadeOrdenCliente(ordenId, carritoCompra);
+            OrdenCliente ordenCliente = añadeOrden(clienteId, carritoCompra);
+            añadeDetalleOrden(ordenCliente.getId(), carritoCompra);
             DatabaseManager.conn.commit();
             DatabaseManager.conn.setAutoCommit(true);
             
@@ -372,25 +374,115 @@ public class ControllerServlet extends HttpServlet {
     private int añadeCliente(Cliente cliente) {
         int clienteId = 0;
 
-        //TO DO
-        
+        //insertamos el cliente en la tabla clientes con los campos dni, nombre, email, tlf, direccion, poblacion y tarjeta
+         String addClienteSql = "INSERT into cliente (DNI, Nombre, email, telefono, direccion, poblacion, tarjeta) "+
+                 "values ('"+cliente.getDni()+"','"+
+                             cliente.getNombre()+"','"+
+                             cliente.getEmail()+"','"+
+                             cliente.getTelefono()+"','"+
+                             cliente.getDireccion()+"','"+
+                             cliente.getPoblacion()+"','"+
+                             cliente.getTarjeta()+"')";
+
+        //declaro los objetos Java para la query
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        String devuelveIdCliente ="SELECT id FROM cliente WHERE dni = '"+cliente.getDni()+"' AND  nombre ='"+cliente.getNombre()+"'"; 
+        try {
+            //ejecutar query
+            preparedStatement = DatabaseManager.conn.prepareStatement(addClienteSql);
+            preparedStatement.executeUpdate();
+            
+            LoggerManager.getLog().info("inserta cliente y devuelve id" + clienteId);
+
+            preparedStatement = DatabaseManager.conn.prepareStatement(devuelveIdCliente);
+            resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                clienteId = resultSet.getInt("id");
+            }
+            
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException ex) {
+            LoggerManager.getLog().error(ex.toString());
+        }
+        LoggerManager.getLog().info("inserta cliente y devuelve id" + clienteId);
         return clienteId;
+        
     }
 
-    private int añadeOrden(int clienteId, CarritoCompra carritoCompra) {
-        int ordenId = 0;
+    private OrdenCliente añadeOrden(int clienteId, CarritoCompra carrito) {
+        //tabla orden-cliente se inserta una orden con el id del cliente y con el total (subtotal+gatos) y demas campos los crea. 
         
-        //TO DO
         
-        return ordenId;
+        Random random = new Random();
+        int numeroConfirmacion = random.nextInt(999999999);
+        OrdenCliente ordenCliente = null;
+        
+         //insertamos el cliente en la tabla clientes con los campos dni, nombre, email, tlf, direccion, poblacion y tarjeta
+         String addOrdenCliente = "INSERT into orden_cliente (total, NumeroConfirmacion, idCliente) "+
+                 "values ("+carrito.getTotal()+","+numeroConfirmacion+","+clienteId+")";
+        //declaro los objetos Java para la query
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        String devuelveOrdenCliente ="SELECT * FROM orden_cliente WHERE NumeroConfirmacion = "+numeroConfirmacion; 
+        try {
+            //ejecutar query
+            preparedStatement = DatabaseManager.conn.prepareStatement(addOrdenCliente);
+            preparedStatement.executeUpdate();
+            
+            preparedStatement = DatabaseManager.conn.prepareStatement(devuelveOrdenCliente);
+            resultSet = preparedStatement.executeQuery();
+            
+            if (resultSet.next()) {
+                ordenCliente = new OrdenCliente(resultSet.getInt("id"),
+                                                resultSet.getDouble("total"), 
+                                                resultSet.getDate("fecha"), 
+                                                resultSet.getInt("NumeroConfirmacion"), 
+                                                resultSet.getInt("idCliente"));
+            }
+            
+            preparedStatement.close();
+            resultSet.close();
+
+        } catch (SQLException ex) {
+            
+            LoggerManager.getLog().error(ex.toString());
+        }
+        LoggerManager.getLog().info("inserta ordencliente y devuelve el objeto");     
+        return ordenCliente;
     }
 
-    private int añadeOrdenCliente(int ordenId, CarritoCompra carritoCompra) {
-        int numReferenciaOrden = 0;
+    private void añadeDetalleOrden(int ordenId, CarritoCompra carritoCompra) {
+        //tabla detalle-orden. Insertamos la confirmacion de la orden.
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String addDetalleOrden;
         
-        //TO DO
-        
-        return numReferenciaOrden;
+        for(int i = 0; i< carritoCompra.getProductosCarritoCompra().size(); i++){
+            try {
+                addDetalleOrden = "INSERT into detalle_orden (idProducto, idOrden, cantidad, total) "+
+                                  "values ("+carritoCompra.getProductosCarritoCompra().get(i).getProducto().getId()
+                                    +","+ordenId
+                                    +","+carritoCompra.getProductosCarritoCompra().get(i).getCantidad()
+                                    +","+carritoCompra.getProductosCarritoCompra().get(i).getPrecioProductos()+")";
+                //declaro los objetos Java para la query
+                
+                preparedStatement = DatabaseManager.conn.prepareStatement(addDetalleOrden);
+                preparedStatement.executeUpdate();
+                LoggerManager.getLog().info("inserta detalleOrden en la BBDD"+ordenId);
+            } catch (SQLException ex) {
+                Logger.getLogger(ControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }       
+        }
+     
     }
+        
+        
+    
 
 }

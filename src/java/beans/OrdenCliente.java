@@ -18,6 +18,7 @@ public class OrdenCliente {
     private double total;
     private Date fecha;
     private int numeroConfirmacion;
+    private int clienteId;
 
     public OrdenCliente() {
     }
@@ -26,11 +27,12 @@ public class OrdenCliente {
         this.id = id;
     }
 
-    public OrdenCliente(int id, double total, Date fecha, int numeroConfirmacion) {
+    public OrdenCliente(int id, double total, Date fecha, int numeroConfirmacion, int clienteId) {
         this.id = id;
         this.total = total;
         this.fecha =  fecha;
         this.numeroConfirmacion = numeroConfirmacion;
+        this.clienteId = clienteId;
     }
 
     public int getId() {

@@ -18,6 +18,15 @@
         <form action="purchase" method="post">
             <table id="checkoutTable">
                 <tr>
+                    <td><label for="nombre">DNI</label></td>
+                    <td class="inputField">
+                        <input type="text"
+                               size="31"
+                               maxlength="45"
+                               id="nombre"
+                               name="dni">
+                    </td>
+                </tr>
                     <td><label for="nombre">Nombre</label></td>
                     <td class="inputField">
                         <input type="text"
